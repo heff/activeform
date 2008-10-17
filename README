@@ -1,0 +1,56 @@
+SETUP
+1. Your form must have an ID, which is not included by defult in Rails, 
+you can do <% form_for :model, :html => { :id => "model" }, :url...
+
+2. The first class name for each field must be the name of the ActiveFormField type
+it should be set as. (class = "select" or class = "phone") See below for a list of
+available field types.
+
+3. Set the requirements for each form. If required, include a class name "required".
+The order doesn't matter as long as it's not first. (class = "text required")
+
+4. Create an instance of ActiveForm after the page loads. ( var bill = new ActiveForm(form_id); )
+The form id should probably be the same as the instance name.
+
+That's it.
+
+Now in your javascript on the page you can do fun stuff like:
+
+Access and set the field value directly.
+The form ID is removed from the field id to create the attribute/field name.
+user.name("Steve") // Sets name as "Steve"
+user.name() // => "Steve" (don't forget the parenthesis () railsers')
+
+Trigger events
+user.country_field.after_set = function(value) {
+  if(value = "USA") {
+    $('user_state_div').show();
+  }
+}
+
+REFERENCING
+
+Overview
+VALUE:    form.attribute();
+OBJECT:   form.attribute_field;
+ELEMENT:  form.attribute_field.element;
+
+WRONG: user.name().after_set = function() {};
+form.attribute() is not the ActiveFormField object. It is just a getter/setter.
+
+RIGHT: user.fields.name.after_set = function() {};
+form.fields.attribute is the ActiveFormField object
+
+WRONG: user.fields.name.value;
+form.fields.attribute is not the actual input element, it is the ActiveFormField object
+
+RIGHT: user.fields.name.element.value;
+
+Though if you just want the value
+RIGHTER: user.name();
+
+NOTES
+
+Choosing to go with the format of form.field.get() instead of
+form.attribute() and form.fields.field.get() because I'm finding my self using the field functions
+a lot more than I thougth I would.
